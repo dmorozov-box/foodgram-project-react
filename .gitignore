@@ -131,5 +131,8 @@ dmypy.json
 # .idea
 .idea
 
-# .media
+# media
 backend/foodgram_project/media/
+
+# vscode
+vscode
