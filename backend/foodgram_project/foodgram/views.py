@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -10,17 +9,16 @@ from rest_framework.response import Response
 from .filters import RecipeFilter, SearchByNameFilter
 from .models import (
     Tag, Ingredient, Recipe, RecipeIngredient,
-    Favorite, ShoppingList, Subscription,
+    Favorite, ShoppingList
 )
-from .permissions import IsAuthorOrSuperuserOrReadOnlyPermission
+from users.permissions import IsAuthorOrSuperuserOrReadOnlyPermission
 from .serializers import (
     TagSerializer, IngredientSerializer,
     RecipeSerializer,  RecipeCreateSerializer, RecipeIngredientSerializer,
-    ShoppingListSerializer, FavoriteSerializer, SubscriptionSerializer
+    ShoppingListSerializer, FavoriteSerializer,
+    SubscriptionWithRecipeSerializer
 )
-
-
-User = get_user_model()
+from users.views import SubscriptionViewSet
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -85,8 +83,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         recipe_id = self.kwargs.get('recipe_id')
-        recipe = get_object_or_404(Recipe, pk=recipe_id)
-        return recipe
+        return get_object_or_404(Recipe, pk=recipe_id)
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
@@ -134,43 +131,18 @@ class ShoppingListViewSet(FavoriteViewSet):
     serializer_class = ShoppingListSerializer
 
 
-class SubscriptionViewSet(viewsets.ModelViewSet):
-    serializer_class = SubscriptionSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+class SubscriptionWithRecipeViewSet(SubscriptionViewSet):
+    serializer_class = SubscriptionWithRecipeSerializer
 
-    def get_author(self):
-        author_id = self.kwargs.get('author_id')
-        return get_object_or_404(User, id=author_id)
 
-    def get_queryset(self):
-        return Subscription.objects.filter(user=self.request.user)
-
-    def create(self, request, *args, **kwargs):
-        author = self.get_author()
-        if author == self.request.user:
-            return Response(
-                'Нельзя подписаться на самого себя.',
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        if Subscription.objects.filter(user=self.request.user, author=author):
-            return Response(
-                'Вы уже подписаны на автора.',
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        return super().create(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user, author=self.get_author())
-
-    @action(methods=['delete'], detail=True)
-    def delete(self, request, **kwargs):
-        object = get_object_or_404(
-            Subscription,
-            user=self.request.user,
-            author=self.get_author()
-        )
-        object.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+def get_shopping_cart_report_content(ingredients):
+    header = 'Список покупок.\n\n'
+    details = '\n'.join([
+        f'{ingredient["name"]} ({ingredient["measurement_unit"]}) - '
+        f'{ingredient["amount"]}'
+        for ingredient in ingredients
+    ])
+    return header + details
 
 
 @api_view(['GET'])
@@ -184,12 +156,10 @@ def shopping_cart(request):
     ).annotate(
         amount=Sum('ingredients__amount')
     )
-    report_string = 'Список покупок.\n\n' + '\n'.join([
-        f'{ingredient["name"]} ({ingredient["measurement_unit"]}) - '
-        f'{ingredient["amount"]}'
-        for ingredient in ingredients
-    ])
 
-    response = HttpResponse(report_string, 'Content-Type: text/plain')
+    response = HttpResponse(
+        get_shopping_cart_report_content(ingredients),
+        'Content-Type: text/plain'
+    )
     response['Content-Disposition'] = 'attachment; filename=Cart.txt'
     return response

@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     TagViewSet, TagsViewSet, IngredientViewSet, IngredientsViewSet,
     RecipesViewSet, RecipeViewSet,
-    ShoppingListViewSet, FavoriteViewSet, SubscriptionViewSet,
+    ShoppingListViewSet, FavoriteViewSet, SubscriptionWithRecipeViewSet,
     shopping_cart
 )
 
@@ -38,11 +38,11 @@ router.register(
 )
 
 router.register(
-    r'users/(?P<author_id>\d+)/subscribe', SubscriptionViewSet,
+    r'users/(?P<author_id>\d+)/subscribe', SubscriptionWithRecipeViewSet,
     basename='subscribe'
 )
 router.register(
-    r'users/subscriptions', SubscriptionViewSet,
+    r'users/subscriptions', SubscriptionWithRecipeViewSet,
     basename='subscriptions'
 )
 

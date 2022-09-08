@@ -27,15 +27,19 @@ docker-compose up -d --build
 2. Выполнить миграции, создать суперпользователя и собрать статику в контейнере
 Для этого в контейнере backend нужно выполнить команды:
 ```
-docker-compose exec web python manage.py migrate
-docker-compose exec web python manage.py createsuperuser
-docker-compose exec web python manage.py collectstatic --no-input
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py collectstatic --no-input
 ```
-3. Сайт доступен по ссылке http://localhost/
+3. Для заполнения базы данных списком ингредиентов из ingredients.json воспользуйтесь командой:
+```
+python manage.py load_ingredients
+```
+4. Сайт доступен по ссылке http://localhost/
 Админ панель сайта http://localhost/admin/
 OpenAPI спецификация бэкенда http://localhost/api/docs/
 
-4. Для остановки контейнеров воспользуйтесь командой
+5. Для остановки контейнеров воспользуйтесь командой
 ```
 docker-compose down -v
 ```

@@ -4,7 +4,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = 'qe8g(ehdgd&l6gjytm*(2x3z!&myxg_tv2)eb&xsn=qrz&4ko5'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'users',
     'foodgram',
 ]
 
@@ -50,9 +51,9 @@ REST_FRAMEWORK = {
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-        'user_create': 'foodgram.serializers.UserCreateSerializer',
-        'user': 'foodgram.serializers.UserSerializer',
-        'current_user': 'foodgram.serializers.UserSerializer',
+        'user_create': 'users.serializers.UserCreateSerializer',
+        'user': 'users.serializers.UserSerializer',
+        'current_user': 'users.serializers.UserSerializer',
     },
     'PERMISSIONS': {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly']

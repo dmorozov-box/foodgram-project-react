@@ -1,17 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
 
 from .models import (
     Tag, Ingredient, RecipeIngredient, Recipe,
-    ShoppingList, Favorite, Subscription
+    ShoppingList, Favorite
 )
-
-User = get_user_model()
-
-
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name')
-    search_fields = ('username', 'email')
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -44,12 +36,9 @@ class RecipeAdmin(admin.ModelAdmin):
     favorite.short_description = 'Сколько раз добавили в избранное'
 
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(ShoppingList)
 admin.site.register(Favorite)
-admin.site.register(Subscription)
