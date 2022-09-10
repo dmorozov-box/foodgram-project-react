@@ -79,7 +79,7 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             sudo docker-compose stop
-            sudo docker-compose rm web
+            sudo docker-compose rm backend
             touch .env
             echo DB_ENGINE=${{ secrets.POSTGRES_DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.POSTGRES_DB_NAME }} >> .env
