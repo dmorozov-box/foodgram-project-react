@@ -82,12 +82,12 @@ jobs:
             sudo docker-compose rm backend
             sudo docker rmi dmorozovbox/foodgram_backend
             touch .env
-            echo DB_ENGINE=${{ secrets.POSTGRES_DB_ENGINE }} >> .env
-            echo DB_NAME=${{ secrets.POSTGRES_DB_NAME }} >> .env
+            echo POSTGRES_DB_ENGINE=${{ secrets.POSTGRES_DB_ENGINE }} >> .env
+            echo POSTGRES_DB_NAME=${{ secrets.POSTGRES_DB_NAME }} >> .env
             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-            echo DB_HOST=${{ secrets.POSTGRES_DB_HOST }} >> .env
-            echo DB_PORT=${{ secrets.POSTGRES_DB_PORT }} >> .env
+            echo POSTGRES_DB_HOST=${{ secrets.POSTGRES_DB_HOST }} >> .env
+            echo POSTGRES_DB_PORT=${{ secrets.POSTGRES_DB_PORT }} >> .env
             sudo docker-compose up -d 
             
   send_message:
