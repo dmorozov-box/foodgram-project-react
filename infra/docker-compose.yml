@@ -9,7 +9,7 @@ services:
       - ./.env
 
   backend:
-    build: ../backend/foodgram_project/
+    image: dmorozovbox/foodgram_backend
     expose:
       - 8000
     restart: always
@@ -22,11 +22,9 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: dmorozovbox/foodgram_frontend
     volumes:
-      - ../frontend/:/app/result_build/
+      - ../foodgram_frontend/:/app/result_build/
     depends_on:
       - db
 
