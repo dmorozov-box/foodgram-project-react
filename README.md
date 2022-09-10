@@ -43,4 +43,4 @@ OpenAPI спецификация бэкенда http://localhost/api/docs/
 ```
 docker-compose down -v
 ```
-1
+2
