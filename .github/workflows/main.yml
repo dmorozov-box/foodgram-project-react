@@ -80,6 +80,7 @@ jobs:
           script: |
             sudo docker-compose stop
             sudo docker-compose rm backend
+            sudo docker rmi dmorozovbox/foodgram_backend
             touch .env
             echo DB_ENGINE=${{ secrets.POSTGRES_DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.POSTGRES_DB_NAME }} >> .env
