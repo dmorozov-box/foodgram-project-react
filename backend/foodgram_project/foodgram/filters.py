@@ -7,7 +7,6 @@ from .models import Recipe, Tag
 
 
 class RecipeFilter(FilterSet):
-    # tags = AllValuesMultipleFilter(field_name='tags__slug')
     tags = ModelMultipleChoiceFilter(
         queryset=Tag.objects.all(),
         field_name='tags__slug',

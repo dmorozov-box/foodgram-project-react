@@ -9,7 +9,7 @@ services:
       - ./.env
 
   backend:
-    image: dmorozovbox/foodgram_backend
+    image: dmorozovbox/foodgram_backend:latest
     expose:
       - 8000
     restart: always
@@ -22,7 +22,7 @@ services:
       - ./.env
 
   frontend:
-    image: dmorozovbox/foodgram_frontend
+    image: dmorozovbox/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
