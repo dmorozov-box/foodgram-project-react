@@ -41,7 +41,7 @@ jobs:
           with:
             context: ./backend/foodgram_project
             push: true
-            tags: dmorozovbox/foodgram_web:latest
+            tags: dmorozovbox/foodgram_backend:latest
             
   deploy:
     runs-on: ubuntu-latest
