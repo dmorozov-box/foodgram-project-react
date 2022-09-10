@@ -78,6 +78,7 @@ jobs:
           script: |
             sudo docker-compose stop
             sudo docker-compose rm -f backend
+            sudo docker rmi -f dmorozovbox/foodgram_backend
             touch .env
             echo POSTGRES_DB_ENGINE=${{ secrets.POSTGRES_DB_ENGINE }} >> .env
             echo POSTGRES_DB_NAME=${{ secrets.POSTGRES_DB_NAME }} >> .env
