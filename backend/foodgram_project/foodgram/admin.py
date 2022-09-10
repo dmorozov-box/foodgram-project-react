@@ -36,9 +36,17 @@ class RecipeAdmin(admin.ModelAdmin):
     favorite.short_description = 'Сколько раз добавили в избранное'
 
 
+class ShoppingListAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+
+
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+
+
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
 admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(ShoppingList)
-admin.site.register(Favorite)
+admin.site.register(ShoppingList, ShoppingListAdmin)
+admin.site.register(Favorite, FavoriteAdmin)

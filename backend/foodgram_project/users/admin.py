@@ -11,6 +11,10 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email')
 
 
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'author')
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(Subscription)
+admin.site.register(Subscription, SubscriptionAdmin)
