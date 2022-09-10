@@ -1,5 +1,5 @@
 from django_filters.rest_framework import (
-    AllValuesMultipleFilter, ModelMultipleChoiceFilter, BooleanFilter, FilterSet
+    ModelMultipleChoiceFilter, BooleanFilter, FilterSet
 )
 from rest_framework.filters import SearchFilter
 

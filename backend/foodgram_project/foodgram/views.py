@@ -32,8 +32,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         tag_id = self.kwargs.get('tag_id')
-        tag = get_object_or_404(Tag, pk=tag_id)
-        return tag
+        return get_object_or_404(Tag, pk=tag_id)
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -49,8 +48,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         ingredient_id = self.kwargs.get('ingredient_id')
-        ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
-        return ingredient
+        return get_object_or_404(Ingredient, pk=ingredient_id)
 
 
 class RecipeIngredientViewSet(viewsets.ReadOnlyModelViewSet):
