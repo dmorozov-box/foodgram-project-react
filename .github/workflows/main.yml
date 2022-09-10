@@ -23,7 +23,6 @@ jobs:
 #       run: |
 #         python -m flake8       
         
-        
   foodgram_project_build_and_push_to_docker_hub:
       name: Push foodgram_project Docker image to Docker Hub
       runs-on: ubuntu-latest
@@ -44,7 +43,6 @@ jobs:
             context: ./backend/foodgram_project
             push: true
             tags: dmorozovbox/foodgram_backend:latest
-            
             
   frontend_build_and_push_to_docker_hub:
       name: Push frontend Docker image to Docker Hub
@@ -67,37 +65,36 @@ jobs:
             push: true
             tags: dmorozovbox/foodgram_frontend:latest
             
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [foodgram_project_build_and_push_to_docker_hub ,frontend_build_and_push_to_docker_hub]
+    steps:
+      - name: executing remote ssh commands to deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          script: |
+            sudo docker-compose stop
+            sudo docker-compose rm web
+            touch .env
+            echo DB_ENGINE=${{ secrets.POSTGRES_DB_ENGINE }} >> .env
+            echo DB_NAME=${{ secrets.POSTGRES_DB_NAME }} >> .env
+            echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+            echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+            echo DB_HOST=${{ secrets.POSTGRES_DB_HOST }} >> .env
+            echo DB_PORT=${{ secrets.POSTGRES_DB_PORT }} >> .env
+            sudo docker-compose up -d 
             
-#   deploy:
-#     runs-on: ubuntu-latest
-#     needs: build_and_push_to_docker_hub
-#     steps:
-#       - name: executing remote ssh commands to deploy
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: ${{ secrets.HOST }}
-#           username: ${{ secrets.USER }}
-#           key: ${{ secrets.SSH_KEY }}
-#           passphrase: ${{ secrets.PASSPHRASE }}
-#           script: |
-#             sudo docker-compose stop
-#             sudo docker-compose rm web
-#             touch .env
-#             echo DB_ENGINE=${{ secrets.POSTGRES_DB_ENGINE }} >> .env
-#             echo DB_NAME=${{ secrets.POSTGRES_DB_NAME }} >> .env
-#             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-#             echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-#             echo DB_HOST=${{ secrets.POSTGRES_DB_HOST }} >> .env
-#             echo DB_PORT=${{ secrets.POSTGRES_DB_PORT }} >> .env
-#             sudo docker-compose up -d 
-            
-#   send_message:
-#     runs-on: ubuntu-latest
-#     needs: deploy
-#     steps:
-#     - name: send message
-#       uses: appleboy/telegram-action@master
-#       with:
-#         to: ${{ secrets.TELEGRAM_TO }}
-#         token: ${{ secrets.TELEGRAM_TOKEN }}
-#         message: ${{ github.workflow }} успешно выполнен! 
+  send_message:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+    - name: send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: ${{ github.workflow }} успешно выполнен! 
