@@ -1,2 +1,0 @@
-[flake8]
-exclude = backend\foodgram_project\foodgram\migrations\, backend\foodgram_project\users\migrations\
